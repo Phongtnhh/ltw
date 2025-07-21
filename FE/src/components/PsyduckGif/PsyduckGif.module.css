@@ -1,0 +1,276 @@
+/* Psyduck GIF Component */
+.psyduckContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.psyduckWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  filter: drop-shadow(2px 2px 8px rgba(0,0,0,0.3));
+}
+
+.psyduckWrapper:hover {
+  transform: scale(1.05);
+}
+
+.psyduckWrapper:active {
+  transform: scale(0.95);
+}
+
+.psyduckWrapper.shaking {
+  animation: shake 0.1s ease-in-out infinite;
+}
+
+.psyduckGif {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.psyduckGif.angry {
+  filter: hue-rotate(0deg) saturate(1.5) brightness(1.2);
+  animation: pulse 0.2s ease-in-out infinite alternate;
+}
+
+/* Speech Bubble */
+.speechBubble {
+  position: absolute;
+  bottom: 130px;
+  right: 0;
+  transform: translateX(-20px);
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border: 2px solid #333;
+  border-radius: 20px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1001;
+  max-width: 280px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.speechBubble.show {
+  opacity: 1;
+  animation: bubbleAppear 0.3s ease-out;
+}
+
+.speechBubble.angry {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border-color: #d32f2f;
+  color: #d32f2f;
+  animation: bubbleShake 0.2s ease-in-out infinite;
+}
+
+/* Speech bubble tail */
+.speechBubble::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 30px;
+  border: 10px solid transparent;
+  border-top-color: #fff;
+}
+
+.speechBubble::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 28px;
+  border: 12px solid transparent;
+  border-top-color: #333;
+  z-index: -1;
+}
+
+.speechBubble.angry::after {
+  border-top-color: #ffcdd2;
+}
+
+.speechBubble.angry::before {
+  border-top-color: #d32f2f;
+}
+
+/* White Flash Overlay */
+.whiteFlash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.whiteFlash.active {
+  opacity: 1;
+}
+
+/* Click ripple effect */
+.psyduckWrapper::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  z-index: -1;
+}
+
+.psyduckWrapper.clicked::before {
+  width: 140px;
+  height: 140px;
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(-2px) translateY(-1px);
+  }
+  50% {
+    transform: translateX(2px) translateY(1px);
+  }
+  75% {
+    transform: translateX(-1px) translateY(-2px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes bubbleAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes bubbleShake {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  25% {
+    transform: translateX(-52%) translateY(-1px);
+  }
+  75% {
+    transform: translateX(-48%) translateY(1px);
+  }
+}
+
+/* Floating animation */
+.psyduckContainer {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .psyduckContainer {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .psyduckWrapper {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .speechBubble {
+    font-size: 12px;
+    padding: 10px 14px;
+    bottom: 110px;
+    max-width: 200px;
+    transform: translateX(-10px);
+  }
+}
+
+@media (max-width: 480px) {
+  .psyduckContainer {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .psyduckWrapper {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .speechBubble {
+    font-size: 11px;
+    padding: 8px 12px;
+    bottom: 90px;
+    max-width: 180px;
+    transform: translateX(-5px);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .speechBubble {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    color: #e2e8f0;
+    border-color: #4a5568;
+  }
+  
+  .speechBubble::after {
+    border-top-color: #4a5568;
+  }
+  
+  .speechBubble::before {
+    border-top-color: #4a5568;
+  }
+}

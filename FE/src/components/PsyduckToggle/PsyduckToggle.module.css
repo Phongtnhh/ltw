@@ -1,0 +1,126 @@
+/* Simple Psyduck Toggle */
+.toggleContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+}
+
+.toggleButton {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.toggleButton:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+}
+
+.toggleButton:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.toggleButton.disabled {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.toggleButton.disabled:hover {
+  box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.toggleContainer:hover .tooltip {
+  opacity: 1;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Floating animation */
+.toggleContainer {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .toggleContainer {
+    top: 15px;
+    right: 15px;
+  }
+
+  .toggleButton {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+
+  .tooltip {
+    font-size: 11px;
+    padding: 6px 10px;
+    top: 55px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toggleContainer {
+    top: 10px;
+    right: 10px;
+  }
+
+  .toggleButton {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .tooltip {
+    top: 50px;
+  }
+}

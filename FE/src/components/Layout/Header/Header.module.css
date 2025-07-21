@@ -1,0 +1,278 @@
+/* Header component specific styles */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoLink {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logoLink:hover {
+  color: #1d4ed8;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.navLink {
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.navLink:hover {
+  color: #2563eb;
+}
+
+.navLink.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.mobileMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #e5e7eb;
+}
+
+.mobileMenu.open {
+  display: block;
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 1rem 1.5rem;
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+.mobileNavLink:hover {
+  background: #f9fafb;
+  color: #2563eb;
+}
+
+.mobileNavLink.active {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navigation {
+    display: none;
+  }
+  
+  .mobileMenuButton {
+    display: block;
+  }
+  
+  .headerContent {
+    position: relative;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoLink {
+    font-size: 1.25rem;
+  }
+  
+  .container {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Auth Section Styles */
+.authSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userName {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.logoutButton {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logoutButton:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loginButton {
+  color: #3b82f6;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: 1px solid #3b82f6;
+}
+
+.loginButton:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.registerButton {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.registerButton:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Mobile Auth Section */
+.mobileAuthSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobileUserInfo {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.mobileLogoutButton {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mobileLogoutButton:hover {
+  background: #b91c1c;
+}
+
+.mobileLoginButton {
+  color: #3b82f6;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #3b82f6;
+  transition: all 0.2s ease;
+}
+
+.mobileLoginButton:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.mobileRegisterButton {
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+.mobileRegisterButton:hover {
+  background: #1d4ed8;
+}
+
+/* Responsive adjustments for auth section */
+@media (max-width: 768px) {
+  .authSection {
+    display: none;
+  }
+}

@@ -1,0 +1,417 @@
+/* Services page specific styles */
+.servicesPage {
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.pageHeader {
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.pageTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.pageSubtitle {
+  color: #4b5563;
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.popularSection {
+  margin-bottom: 3rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.popularGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.popularCard {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid #2563eb;
+}
+
+.popularCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.serviceIcon {
+  font-size: 1.875rem;
+  flex-shrink: 0;
+}
+
+.cardTitleArea {
+  flex: 1;
+}
+
+.cardTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.popularBadge {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.cardDescription {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.cardDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailLabel {
+  color: #6b7280;
+}
+
+.detailValue {
+  font-weight: 600;
+}
+
+.feeValue {
+  color: #059669;
+}
+
+.actionButton {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actionButton:hover {
+  background: #1d4ed8;
+}
+
+.allServicesSection {
+  margin-bottom: 3rem;
+}
+
+.searchAndFilter {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.searchRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchButton {
+  background: #2563eb;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.searchButton:hover {
+  background: #1d4ed8;
+}
+
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filterBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.filterBtn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.filterBtn:not(.active) {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.filterBtn:not(.active):hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.serviceCard {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.serviceCard:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.serviceHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.serviceInfo {
+  flex: 1;
+}
+
+.serviceTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.serviceTags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.serviceTag {
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.onlineTag {
+  background: #dcfce7;
+  color: #059669;
+}
+
+.offlineTag {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.serviceDescription {
+  color: #4b5563;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.serviceActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.primaryAction {
+  flex: 1;
+  background: #2563eb;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.primaryAction:hover {
+  background: #1d4ed8;
+}
+
+.secondaryAction {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  color: #4b5563;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.secondaryAction:hover {
+  background: #f9fafb;
+}
+
+.helpSection {
+  margin-top: 4rem;
+  background: #eff6ff;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.helpTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.helpDescription {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.helpButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.helpButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.helpPrimary {
+  background: #2563eb;
+  color: white;
+}
+
+.helpPrimary:hover {
+  background: #1d4ed8;
+}
+
+.helpSecondary {
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  background: white;
+}
+
+.helpSecondary:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .headerContent {
+    padding: 1.5rem 1rem;
+  }
+  
+  .mainContent {
+    padding: 1.5rem 1rem;
+  }
+  
+  .searchRow {
+    flex-direction: column;
+  }
+  
+  .popularGrid,
+  .servicesGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .helpButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .helpButton {
+    width: 200px;
+  }
+  
+  .filterButtons {
+    justify-content: center;
+  }
+}
