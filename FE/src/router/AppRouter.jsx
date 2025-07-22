@@ -18,6 +18,7 @@ import Register from '../pages/Auth/Register';
 
 // Import Detail pages
 import Detailnews from '../pages/Detailnews';
+import CreateNews from '../pages/CreateNews';
 
 // Import sub-pages
 import OnlineServices from '../pages/services/OnlineServices';
@@ -57,6 +58,17 @@ const AppRouter = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/news" element={<News />} />
                 <Route path="/news/:id" element={<Detailnews />} />
+
+                {/* Protected routes */}
+                <Route
+                  path="/news/create"
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <CreateNews />
+                    </ProtectedRoute>
+                  }
+                />
+
                 <Route path="/services" element={<Services />} />
                 <Route path="/documents" element={<Documents />} />
                 <Route path="/contact" element={<Contact />} />

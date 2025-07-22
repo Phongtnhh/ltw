@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from './News.module.css';
 
 const News = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [newsData, setNewsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const categories = [
     { id: 'all', name: 'Tất cả' },
@@ -17,17 +22,24 @@ const News = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:3000/news');
+        const response = await fetch(`http://localhost:3000/news?page=${currentPage}`);
         const data = await response.json();
-        setNewsData(data.data); 
 
+        // Gắn domain cho thumbnail
+        const formattedNews = data.News.map((item) => ({
+          ...item,
+          thumbnail: `http://localhost:3000${item.thumbnail}`
+        }));
+
+        setNewsData(formattedNews);
+        setTotalPages(data.totalPages || 1);
       } catch (error) {
         console.error('Lỗi khi tải tin tức:', error);
+        setNewsData([]);
       }
     };
-
     fetchNews();
-  }, []);
+  }, [currentPage]);
 
   const filteredNews =
     selectedCategory === 'all'
@@ -37,6 +49,15 @@ const News = () => {
   const featuredNews = newsData.find((news) => news.featured);
   const regularNews = filteredNews.filter((news) => !news.featured);
 
+  const handleCreateNews = () => {
+    if (!isAuthenticated) {
+      alert('Vui lòng đăng nhập để tạo bài viết mới');
+      navigate('/login');
+    } else {
+      navigate('/news/create');
+    }
+  };
+
   return (
     <div className={styles.newsPage}>
       {/* Header */}
@@ -44,22 +65,21 @@ const News = () => {
         <div className={styles.headerContent}>
           <h1 className={styles.pageTitle}>Tin Tức</h1>
           <p className={styles.pageSubtitle}>Cập nhật thông tin mới nhất từ cổng thông tin</p>
+          <button className={styles.createNewsBtn} onClick={handleCreateNews}>
+            Tạo bài viết mới
+          </button>
         </div>
       </div>
 
       <div className={styles.mainContent}>
-        {/* Main Content */}
+        {/* Content */}
         <div className={styles.contentArea}>
-          {/* Featured News */}
+          {/* Tin nổi bật */}
           {featuredNews && selectedCategory === 'all' && (
             <div className={styles.featuredSection}>
               <h2 className={styles.featuredTitle}>Tin Nổi Bật</h2>
               <article className={styles.featuredCard}>
-                <img
-                  src={featuredNews.thumbnail}
-                  alt={featuredNews.title}
-                  className={styles.featuredImage}
-                />
+                <img src={featuredNews.thumbnail} alt={featuredNews.title} />
                 <div className={styles.featuredContent}>
                   <div className={styles.categoryTags}>
                     <span className={styles.categoryTag}>
@@ -85,7 +105,7 @@ const News = () => {
             </div>
           )}
 
-          {/* Category Filter */}
+          {/* Bộ lọc thể loại */}
           <div className={styles.filterSection}>
             <div className={styles.filterButtons}>
               {categories.map((category) => (
@@ -102,7 +122,7 @@ const News = () => {
             </div>
           </div>
 
-          {/* News Grid */}
+          {/* Danh sách tin tức */}
           <div className={styles.newsGrid}>
             {regularNews.map((news) => (
               <article key={news._id} className={styles.newsCard}>
@@ -132,34 +152,50 @@ const News = () => {
             ))}
           </div>
 
-          {/* Pagination */}
+          {/* Phân trang */}
           <div className={styles.pagination}>
             <div className={styles.paginationButtons}>
-              <button className={styles.paginationBtn}>← Trước</button>
-              <button className={`${styles.paginationBtn} ${styles.active}`}>1</button>
-              <button className={styles.paginationBtn}>2</button>
-              <button className={styles.paginationBtn}>3</button>
-              <button className={styles.paginationBtn}>Sau →</button>
+              <button
+                className={styles.paginationBtn}
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              >
+                ← Trước
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`${styles.paginationBtn} ${
+                    currentPage === index + 1 ? styles.active : ''
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                className={styles.paginationBtn}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Sau →
+              </button>
             </div>
           </div>
         </div>
 
         {/* Sidebar */}
         <div className={styles.sidebar}>
-          {/* Search */}
+          {/* Tìm kiếm */}
           <div className={styles.sidebarCard}>
             <h3 className={styles.sidebarTitle}>Tìm Kiếm</h3>
             <div className="relative">
-              <input
-                type="text"
-                placeholder="Nhập từ khóa..."
-                className={styles.searchInput}
-              />
+              <input type="text" placeholder="Nhập từ khóa..." className={styles.searchInput} />
               <button className={styles.searchButton}>🔍</button>
             </div>
           </div>
 
-          {/* Popular News */}
+          {/* Tin phổ biến */}
           <div className={styles.sidebarCard}>
             <h3 className={styles.sidebarTitle}>Tin Phổ Biến</h3>
             <div className={styles.popularNews}>

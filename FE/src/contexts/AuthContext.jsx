@@ -28,8 +28,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:3000/admin/auth/login', {
+      const response = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,14 +47,10 @@ export const AuthProvider = ({ children }) => {
       } else {
         return { success: false, error: data.message };
       }
-    } catch (error) {
-      return { success: false, error: 'Lỗi kết nối server' };
-    }
   };
 
   const register = async (userData) => {
-    try {
-      const response = await fetch('http://localhost:3000/admin/auth/register', {
+      const response = await fetch('http://localhost:3000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,10 +64,7 @@ export const AuthProvider = ({ children }) => {
         return { success: true, data };
       } else {
         return { success: false, error: data.message };
-      }
-    } catch (error) {
-      return { success: false, error: 'Lỗi kết nối server' };
-    }
+    } 
   };
 
   const logout = () => {

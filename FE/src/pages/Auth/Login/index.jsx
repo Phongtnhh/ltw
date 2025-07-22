@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../../contexts/AuthContext';
 import styles from './Login.module.css';
 
 const Login = () => {
@@ -13,6 +14,7 @@ const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,39 +50,19 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const fetchLogin = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Đăng nhập thất bại');
-      }
-      
-      return { success: true, data };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setLoading(true);
     try {
-      const result = await fetchLogin(formData.email, formData.password);
-      
+      const result = await login(formData.email, formData.password);
+
       if (result.success) {
-        navigate('/', { replace: true });
+        // Redirect to the page user was trying to access, or home page
+        const from = location.state?.from?.pathname || '/';
+        navigate(from, { replace: true });
       } else {
         setErrors({ submit: result.error });
       }

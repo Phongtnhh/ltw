@@ -12,7 +12,7 @@ const getAuthHeaders = () => {
 // Auth API
 export const authAPI = {
   login: async (email, password) => {
-    const response = await fetch(`${API_BASE_URL}/admin/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export const authAPI = {
   },
 
   register: async (userData) => {
-    const response = await fetch(`${API_BASE_URL}/admin/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const authAPI = {
   },
 
   logout: async () => {
-    const response = await fetch(`${API_BASE_URL}/admin/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
       method: 'GET',
       headers: getAuthHeaders(),
     });
@@ -56,6 +56,19 @@ export const newsAPI = {
     const response = await fetch(`${API_BASE_URL}/client/news/${id}`, {
       method: 'GET',
       headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  createNews: async (formData) => {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/news/postnews`, {
+      method: 'POST',
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+        // Không set Content-Type khi gửi FormData, browser sẽ tự động set
+      },
+      body: formData,
     });
     return response.json();
   },

@@ -13,6 +13,11 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .pageTitle {
@@ -24,6 +29,33 @@
 
 .pageSubtitle {
   color: #4b5563;
+}
+
+.createNewsBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.createNewsBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.createNewsBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .mainContent {
@@ -41,6 +73,67 @@
 
 .sidebar {
   /* Sidebar styles */
+}
+
+/* Loading, Error, and Empty States */
+.loadingContainer,
+.errorContainer,
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingContainer p,
+.errorContainer p,
+.emptyContainer p {
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.errorContainer h3,
+.emptyContainer h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.retryButton {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.retryButton:hover {
+  background: #5a67d8;
 }
 
 .featuredSection {
@@ -354,6 +447,13 @@
 @media (max-width: 768px) {
   .headerContent {
     padding: 1.5rem 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .createNewsBtn {
+    width: 100%;
+    justify-content: center;
   }
   
   .mainContent {
