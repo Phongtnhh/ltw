@@ -62,10 +62,10 @@ module.exports.index = async (req, res) => {
   }
 };
 
-
 // Middleware upload cho postNews
 module.exports.uploadImage = upload.single('thumbnail')
 
+// [post] tao news
 module.exports.postNews = async (req, res) => {
     try {
         const { title, contentHtml, author, status } = req.body;
@@ -96,6 +96,29 @@ module.exports.postNews = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Có lỗi xảy ra khi tạo tin tức',
+            error: error.message
+        })
+    }
+}
+
+// [Get] detail new
+module.exports.detailNews = async (req, res) => {
+    try {
+        const news = await News.findById(req.params.id);
+        if (!news) {
+            return res.status(404).json({
+                success: false,
+                message: 'Không tìm thấy tin tức'
+            })
+        }
+        res.json({
+            success: true,
+            data: news
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Có lỗi xảy ra khi lấy tin tức',
             error: error.message
         })
     }
