@@ -29,7 +29,6 @@ import Procedures from './pages/services/Procedures';
 const ClientApp = () => {
   return (
     <Routes>
-      {/* Auth routes - should not be accessible when logged in */}
       <Route
         path="/login"
         element={
@@ -46,17 +45,12 @@ const ClientApp = () => {
           </ProtectedRoute>
         }
       />
-
-      {/* Main routes with Layout */}
       <Route path="/*" element={
         <Layout>
           <Routes>
-            {/* Public routes */}
             <Route path="/" element={<Home />} />
             <Route path="/news" element={<News />} />
             <Route path="/news/:id" element={<Detailnews />} />
-
-            {/* Protected routes */}
             <Route
               path="/news/create"
               element={

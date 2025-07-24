@@ -1,10 +1,13 @@
 const express = require('express');
+const app = express();
 const cors = require('cors');
 const path = require('path');
 const connectDB = require("./database/db")
 const Routeclient = require("./routes/client/index");
 const RouteAdmin = require("./routes/admin/index.route");
-const app = express();
+const http = require('http');
+const server = http.createServer(app);
+
 const PORT = 3000;
 
 // CORS middleware
@@ -12,6 +15,11 @@ app.use(cors({
   origin: 'http://localhost:5173', // Vite dev server
   credentials: true
 }));
+
+// Socket io
+const {Server}  =  require('socket.io');
+const io = new Server(server);
+global._io = io;
 
 app.use(express.json());
 
@@ -24,6 +32,6 @@ connectDB();
 // Routes
 Routeclient(app);
 RouteAdmin(app);
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
