@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 // import { useAuth } from '../../../shared/contexts/AuthContext';
+import { newsAPI } from '../../../shared/services/api';
 import styles from './News.module.css';
 
 const News = () => {
@@ -10,6 +11,10 @@ const News = () => {
   const [newsData, setNewsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // Giá trị hiển thị trong input
+  const [loading, setLoading] = useState(false);
+  const [searchTimeout, setSearchTimeout] = useState(null);
 
   const categories = [
     { id: 'all', name: 'Tất cả' },
@@ -22,13 +27,21 @@ const News = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/news?page=${currentPage}`);
-        const data = await response.json();
+        setLoading(true);
+
+        // Tạo tham số cho API
+        const params = {
+          page: currentPage,
+          ...(searchTerm && { search: searchTerm }),
+          ...(selectedCategory !== 'all' && { category: selectedCategory })
+        };
+
+        const data = await newsAPI.getAllNews(params);
 
         // Gắn domain cho thumbnail
         const formattedNews = data.News.map((item) => ({
           ...item,
-          thumbnail: `http://localhost:3000${item.thumbnail}`
+          thumbnail: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${item.thumbnail}`
         }));
 
         setNewsData(formattedNews);
@@ -36,18 +49,59 @@ const News = () => {
       } catch (error) {
         console.error('Lỗi khi tải tin tức:', error);
         setNewsData([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchNews();
-  }, [currentPage]);
+  }, [currentPage, searchTerm, selectedCategory]);
 
-  const filteredNews =
-    selectedCategory === 'all'
-      ? newsData
-      : newsData.filter((news) => news.category === selectedCategory);
+  // Cleanup timeout khi component unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
+
+  // Xử lý tìm kiếm
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
+  };
+
+  const handleSearchInputChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value); // Cập nhật giá trị hiển thị ngay lập tức
+
+    // Clear timeout cũ
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    // Đặt timeout mới để debounce
+    const newTimeout = setTimeout(() => {
+      setSearchTerm(value);
+      setCurrentPage(1); // Reset về trang đầu khi thay đổi từ khóa
+    }, 500); // Đợi 500ms sau khi user ngừng gõ
+
+    setSearchTimeout(newTimeout);
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset về trang đầu khi thay đổi category
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setSearchInput('');
+    setCurrentPage(1);
+  };
 
   const featuredNews = newsData.find((news) => news.featured);
-  const regularNews = filteredNews.filter((news) => !news.featured);
+  const regularNews = newsData.filter((news) => !news.featured);
 
   // const handleCreateNews = () => {
   //   if (!isAuthenticated) {
@@ -74,8 +128,74 @@ const News = () => {
       <div className={styles.mainContent}>
         {/* Content */}
         <div className={styles.contentArea}>
+          {/* Thanh tìm kiếm và bộ lọc */}
+          <div className={styles.searchAndFilter}>
+            <form onSubmit={handleSearch} className={styles.searchForm}>
+              <div className={styles.searchInputGroup}>
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm bài viết..."
+                  value={searchInput}
+                  onChange={handleSearchInputChange}
+                  className={styles.searchInput}
+                />
+                <div className={styles.searchButtons}>
+                  {searchInput && (
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className={styles.clearButton}
+                      title="Xóa tìm kiếm"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  )}
+                  <button type="submit" className={styles.searchButton}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {/* Bộ lọc danh mục */}
+            <div className={styles.categoryFilter}>
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryChange(category.id)}
+                  className={`${styles.categoryBtn} ${
+                    selectedCategory === category.id ? styles.active : ''
+                  }`}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Hiển thị trạng thái loading */}
+          {loading && (
+            <div className={styles.loadingState}>
+              <div className={styles.spinner}></div>
+              <p>Đang tải...</p>
+            </div>
+          )}
+
+          {/* Hiển thị kết quả tìm kiếm */}
+          {searchTerm && !loading && (
+            <div className={styles.searchResults}>
+              <p>Kết quả tìm kiếm cho: <strong>"{searchTerm}"</strong></p>
+              {newsData.length === 0 && (
+                <p className={styles.noResults}>Không tìm thấy bài viết nào phù hợp.</p>
+              )}
+            </div>
+          )}
           {/* Tin nổi bật */}
-          {featuredNews && selectedCategory === 'all' && (
+          {featuredNews && selectedCategory === 'all' && !searchTerm && (
             <div className={styles.featuredSection}>
               <h2 className={styles.featuredTitle}>Tin Nổi Bật</h2>
               <article className={styles.featuredCard}>
@@ -105,22 +225,7 @@ const News = () => {
             </div>
           )}
 
-          {/* Bộ lọc thể loại */}
-          <div className={styles.filterSection}>
-            <div className={styles.filterButtons}>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`${styles.filterBtn} ${
-                    selectedCategory === category.id ? styles.active : ''
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
+
 
           {/* Danh sách tin tức */}
           <div className={styles.newsGrid}>
@@ -186,15 +291,6 @@ const News = () => {
 
         {/* Sidebar */}
         <div className={styles.sidebar}>
-          {/* Tìm kiếm */}
-          <div className={styles.sidebarCard}>
-            <h3 className={styles.sidebarTitle}>Tìm Kiếm</h3>
-            <div className="relative">
-              <input type="text" placeholder="Nhập từ khóa..." className={styles.searchInput} />
-              <button className={styles.searchButton}>🔍</button>
-            </div>
-          </div>
-
           {/* Tin phổ biến */}
           <div className={styles.sidebarCard}>
             <h3 className={styles.sidebarTitle}>Tin Phổ Biến</h3>

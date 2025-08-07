@@ -5,18 +5,33 @@ module.exports.index = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
+    const search = req.query.search || '';
+    const category = req.query.category || '';
+
+    // Tạo query filter
+    let filter = {
+      status: 'published',
+      deleted: { $ne: true }
+    };
+
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { author: { $regex: search, $options: 'i' } },
+        { excerpt: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    
+    if (category && category !== 'all') {
+      filter.category = category;
+    }
 
     const [news, totalItems] = await Promise.all([
-      News.find({
-        status: 'published',
-        deleted: { $ne: true }
-      }).sort({ createdAt: -1 }).limit(limit).skip(skip),
-      
-      News.countDocuments({
-        status: 'published',
-        deleted: { $ne: true }
-      })
-    ]); 
+      News.find(filter).sort({ createdAt: -1 }).limit(limit).skip(skip),
+      News.countDocuments(filter)
+    ]);
 
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -24,7 +39,8 @@ module.exports.index = async (req, res) => {
       massage: "Lấy tin tức thành công",
       News: news,
       currentPage: page,
-      totalPages: totalPages
+      totalPages: totalPages,
+      totalItems: totalItems
     });
   } catch (error) {
     res.status(500).json({ massage: "Lỗi server" });

@@ -14,7 +14,7 @@ const CreateNews = () => {
     contentHtml: '',
     author: user?.fullName || '',
     status: 'draft',
-    category: 'all',
+    category: 'announcement',
     excerpt: '',
     featured: false
   });
@@ -252,7 +252,6 @@ const CreateNews = () => {
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="all">Tất cả</option>
                 <option value="announcement">Thông báo</option>
                 <option value="policy">Chính sách</option>
                 <option value="service">Dịch vụ</option>

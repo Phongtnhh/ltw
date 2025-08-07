@@ -11,8 +11,8 @@ const newsSchema = new mongoose.Schema(
     deletedAt: Date,
     category: {
       type: String,
-      enum: ["all", "announcement", "policy", "service", "event"],
-      default: "all",
+      enum: ["announcement", "policy", "service", "event"],
+      default: "announcement",
     },
     excerpt: String,
     featured: { type: Boolean, default: false },

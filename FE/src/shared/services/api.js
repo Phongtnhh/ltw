@@ -53,8 +53,17 @@ export const newsAPI = {
     return response.json();
   },
 
-  getAllNews: async () => {
-    const response = await fetch(`${API_BASE_URL}/client/news`, {
+  getAllNews: async (params = {}) => {
+    const queryParams = new URLSearchParams();
+
+    // Thêm các tham số tìm kiếm
+    if (params.page) queryParams.append('page', params.page);
+    if (params.search) queryParams.append('search', params.search);
+    if (params.category && params.category !== 'all') queryParams.append('category', params.category);
+
+    const url = `${API_BASE_URL}/news${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
       method: 'GET',
       headers: getAuthHeaders(),
     });

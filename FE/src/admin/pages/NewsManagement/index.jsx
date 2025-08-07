@@ -258,12 +258,6 @@ const NewsManagement = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-2">
-                      <Link
-                        to={`/admin/news/edit/${news._id}`}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        Sửa
-                      </Link>
                       <button
                         onClick={() => handleStatusChange(news._id, news.status === 'published' ? 'draft' : 'published')}
                         className="text-green-600 hover:text-green-900"

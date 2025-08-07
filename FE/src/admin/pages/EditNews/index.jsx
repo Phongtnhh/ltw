@@ -15,7 +15,7 @@ const EditNews = () => {
     contentHtml: '',
     author: user?.fullName || '',
     status: 'draft',
-    category: 'all',
+    category: 'announcement',
     excerpt: '',
     featured: false
   });
@@ -47,7 +47,7 @@ const EditNews = () => {
             contentHtml: news.contentHtml || '',
             author: news.author || '',
             status: news.status || 'draft',
-            category: news.category || 'all',
+            category: news.category || 'announcement',
             excerpt: news.excerpt || '',
             featured: news.featured || false
           });
@@ -316,12 +316,10 @@ const EditNews = () => {
                   onChange={handleInputChange}
                   className={styles.select}
                 >
-                  <option value="all">Tất cả</option>
-                  <option value="technology">Công nghệ</option>
-                  <option value="business">Kinh doanh</option>
-                  <option value="education">Giáo dục</option>
-                  <option value="health">Sức khỏe</option>
-                  <option value="entertainment">Giải trí</option>
+                  <option value="announcement">Thông báo</option>
+                  <option value="policy">Chính sách</option>
+                  <option value="service">Dịch vụ</option>
+                  <option value="event">Sự kiện</option>
                 </select>
               </div>
             </div>
