@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const controller = require("../../controllers/admin/news.controller");
-const { authenticateToken, requirePermission } = require("../../middlewares/auth.middleware");
-
-// Áp dụng middleware authentication cho tất cả routes
-router.use(authenticateToken);
 
 // [GET] Test route
 router.get("/test", (req, res) => {
@@ -13,24 +9,24 @@ router.get("/test", (req, res) => {
 });
 
 // [GET] Lấy danh sách tin tức (có phân trang, filter, search)
-router.get("/", requirePermission('news', 'read'), controller.index);
+router.get("/", controller.index);
 
 // [POST] Tạo tin tức mới
-router.post("/", requirePermission('news', 'create'), controller.uploadImage, controller.create);
+router.post("/", controller.uploadImage, controller.create);
 
 // [GET] Lấy chi tiết tin tức
-router.get("/:id", requirePermission('news', 'read'), controller.detail);
+router.get("/:id", controller.detail);
 
 // [GET] Lấy tin tức để edit
-router.get("/:id/edit", requirePermission('news', 'read'), controller.edit);
+router.get("/:id/edit", controller.edit);
 
 // [PUT] Cập nhật tin tức
-router.put("/:id", requirePermission('news', 'update'), controller.uploadImage, controller.update);
+router.put("/:id", controller.uploadImage, controller.update);
 
 // [DELETE] Xóa tin tức (soft delete)
-router.delete("/:id", requirePermission('news', 'delete'), controller.delete);
+router.delete("/:id", controller.delete);
 
 // [PATCH] Thay đổi trạng thái tin tức
-router.patch("/:id/status", requirePermission('news', 'update'), controller.changeStatus);
+router.patch("/:id/status", controller.changeStatus);
 
 module.exports = router;

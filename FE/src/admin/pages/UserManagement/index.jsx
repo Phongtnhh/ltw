@@ -1,200 +1,89 @@
-import React, { useState, useEffect } from 'react';
-import { userAPI, roleAPI } from '../../../shared/services/api';
-import PermissionGuard from '../../../shared/components/PermissionGuard';
+import React, { useState } from 'react';
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    current: 1,
-    total: 1,
-    count: 0,
-    totalRecords: 0
-  });
-  const [filters, setFilters] = useState({
-    search: '',
-    role: '',
-    page: 1,
-    limit: 10
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+
+  // Mock data
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      name: 'Nguyễn Văn A',
+      email: 'admin@example.com',
+      role: 'admin',
+      status: 'active',
+      createdAt: '2024-01-10',
+      lastLogin: '2024-01-15 10:30'
+    },
+    {
+      id: 2,
+      name: 'Trần Thị B',
+      email: 'user@example.com',
+      role: 'user',
+      status: 'active',
+      createdAt: '2024-01-12',
+      lastLogin: '2024-01-14 15:20'
+    },
+    {
+      id: 3,
+      name: 'Lê Văn C',
+      email: 'editor@example.com',
+      role: 'editor',
+      status: 'inactive',
+      createdAt: '2024-01-08',
+      lastLogin: '2024-01-10 09:15'
+    }
+  ]);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [newUser, setNewUser] = useState({
-    fullName: '',
+    name: '',
     email: '',
-    password: '',
-    phone: '',
-    roleId: '',
-    status: 'active'
+    role: 'user',
+    password: ''
   });
 
-  // Load data khi component mount
-  useEffect(() => {
-    loadUsers();
-    loadRoles();
-  }, [filters]);
-
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await userAPI.getUsers(filters);
-      if (response.success) {
-        setUsers(response.data.users);
-        setPagination(response.data.pagination);
-      } else {
-        setError(response.message);
-      }
-    } catch (err) {
-      setError('Không thể tải danh sách người dùng');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadRoles = async () => {
-    try {
-      const response = await roleAPI.getRoles();
-      if (response.success) {
-        setRoles(response.data);
-      }
-    } catch (err) {
-      console.error('Không thể tải danh sách roles:', err);
-    }
-  };
-
-  const handleCreateUser = async (e) => {
+  const handleCreateUser = (e) => {
     e.preventDefault();
-    try {
-      const response = await userAPI.createUser(newUser);
-      if (response.success) {
-        setNewUser({
-          fullName: '',
-          email: '',
-          password: '',
-          phone: '',
-          roleId: '',
-          status: 'active'
-        });
-        setShowCreateModal(false);
-        loadUsers(); // Reload danh sách
-        alert('Tạo người dùng thành công!');
-      } else {
-        alert(response.message || 'Có lỗi xảy ra');
-      }
-    } catch (err) {
-      alert('Không thể tạo người dùng');
+    const user = {
+      id: users.length + 1,
+      ...newUser,
+      status: 'active',
+      createdAt: new Date().toISOString().split('T')[0],
+      lastLogin: 'Chưa đăng nhập'
+    };
+    setUsers([...users, user]);
+    setNewUser({ name: '', email: '', role: 'user', password: '' });
+    setShowCreateModal(false);
+  };
+
+  const handleDeleteUser = (id) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+      setUsers(users.filter(user => user.id !== id));
     }
   };
 
-  const handleEditUser = (user) => {
-    setSelectedUser(user);
-    setNewUser({
-      fullName: user.fullName,
-      email: user.email,
-      password: '',
-      phone: user.phone || '',
-      roleId: user.role._id,
-      status: user.status
-    });
-    setShowEditModal(true);
+  const handleStatusChange = (id, newStatus) => {
+    setUsers(users.map(user => 
+      user.id === id ? { ...user, status: newStatus } : user
+    ));
   };
 
-  const handleUpdateUser = async (e) => {
-    e.preventDefault();
-    try {
-      const updateData = { ...newUser };
-      if (!updateData.password) {
-        delete updateData.password; // Không cập nhật password nếu để trống
-      }
-
-      const response = await userAPI.updateUser(selectedUser._id, updateData);
-      if (response.success) {
-        setShowEditModal(false);
-        setSelectedUser(null);
-        loadUsers(); // Reload danh sách
-        alert('Cập nhật người dùng thành công!');
-      } else {
-        alert(response.message || 'Có lỗi xảy ra');
-      }
-    } catch (err) {
-      alert('Không thể cập nhật người dùng');
-    }
-  };
-
-  const handleDeleteUser = async (user) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa người dùng "${user.fullName}"?`)) {
-      try {
-        const response = await userAPI.deleteUser(user._id);
-        if (response.success) {
-          loadUsers(); // Reload danh sách
-          alert('Xóa người dùng thành công!');
-        } else {
-          alert(response.message || 'Có lỗi xảy ra');
-        }
-      } catch (err) {
-        alert('Không thể xóa người dùng');
-      }
-    }
-  };
-
-  const handleChangeStatus = async (user, newStatus) => {
-    try {
-      const response = await userAPI.changeUserStatus(user._id, newStatus);
-      if (response.success) {
-        loadUsers(); // Reload danh sách
-        alert('Cập nhật trạng thái thành công!');
-      } else {
-        alert(response.message || 'Có lỗi xảy ra');
-      }
-    } catch (err) {
-      alert('Không thể cập nhật trạng thái');
-    }
-  };
-
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value,
-      page: 1 // Reset về trang đầu khi filter
-    }));
-  };
-
-  const handlePageChange = (page) => {
-    setFilters(prev => ({
-      ...prev,
-      page
-    }));
-  };
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
 
   const getRoleBadge = (role) => {
-    if (!role) return <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">N/A</span>;
-
     const roleConfig = {
       admin: { color: 'bg-red-100 text-red-800', text: 'Admin' },
       editor: { color: 'bg-blue-100 text-blue-800', text: 'Editor' },
       user: { color: 'bg-gray-100 text-gray-800', text: 'User' }
     };
-
-    const config = roleConfig[role.title] || roleConfig.user;
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${config.color}`}>
-        {role.title}
-      </span>
-    );
-  };
-
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      active: { color: 'bg-green-100 text-green-800', text: 'Hoạt động' },
-      inactive: { color: 'bg-gray-100 text-gray-800', text: 'Không hoạt động' },
-      suspended: { color: 'bg-red-100 text-red-800', text: 'Bị khóa' }
-    };
-
-    const config = statusConfig[status] || statusConfig.inactive;
+    
+    const config = roleConfig[role] || roleConfig.user;
     return (
       <span className={`px-2 py-1 text-xs font-medium rounded-full ${config.color}`}>
         {config.text}
@@ -202,27 +91,17 @@ const UserManagement = () => {
     );
   };
 
-  if (loading) {
+  const getStatusBadge = (status) => {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+        status === 'active' 
+          ? 'bg-green-100 text-green-800' 
+          : 'bg-gray-100 text-gray-800'
+      }`}>
+        {status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+      </span>
     );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <div className="text-red-600 mb-4">{error}</div>
-        <button
-          onClick={loadUsers}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-        >
-          Thử lại
-        </button>
-      </div>
-    );
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -232,17 +111,15 @@ const UserManagement = () => {
           <h1 className="text-2xl font-bold text-gray-900">Quản lý Người dùng</h1>
           <p className="text-gray-600">Quản lý tài khoản và phân quyền người dùng</p>
         </div>
-        <PermissionGuard resource="users" action="create">
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Thêm người dùng
-          </button>
-        </PermissionGuard>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+        >
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Thêm người dùng
+        </button>
       </div>
 
       {/* Filters */}
@@ -252,23 +129,21 @@ const UserManagement = () => {
             <input
               type="text"
               placeholder="Tìm kiếm theo tên hoặc email..."
-              value={filters.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
             <select
-              value={filters.role}
-              onChange={(e) => handleFilterChange('role', e.target.value)}
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">Tất cả vai trò</option>
-              {roles.map(role => (
-                <option key={role._id} value={role.title}>
-                  {role.title}
-                </option>
-              ))}
+              <option value="all">Tất cả vai trò</option>
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="user">User</option>
             </select>
           </div>
         </div>

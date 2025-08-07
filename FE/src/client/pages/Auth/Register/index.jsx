@@ -73,7 +73,7 @@ const Register = () => {
 
   const fetchRegister = async (registerData) => {
     try {
-      const response = await fetch('http://localhost:3000/auth/register', {
+      const response = await fetch('http://localhost:3000/admin/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -16,14 +16,9 @@ app.use(cors({
   credentials: true
 }));
 
-// Socket io (removed - no longer needed)
-// const {Server}  =  require('socket.io');
-// const io = new Server(server);
-// global._io = io;
 
 app.use(express.json());
 
-// Serve static files từ thư mục uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Kết nối database

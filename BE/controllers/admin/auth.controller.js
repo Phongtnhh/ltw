@@ -1,5 +1,4 @@
 const Account = require("../../model/account.model");
-const Role = require("../../model/role.route");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -9,7 +8,7 @@ const generateToken = (user) => {
         {
             id: user._id,
             email: user.email,
-            role: user.role
+            role_id: user.role_id
         },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
@@ -19,35 +18,11 @@ const generateToken = (user) => {
 
 // Dang ki
 module.exports.register = async (req, res) => {
-    const { fullName, email, password, phone, roleId } = req.body;
+    const { fullName, email, password, phone } = req.body;
 
     try {
         const existingUser = await Account.findOne({ email });
-        if (existingUser) return res.status(400).json({
-            success: false,
-            message: "Email already exists"
-        });
-
-        // Lấy role mặc định nếu không có roleId
-        let role;
-        if (roleId) {
-            role = await Role.findById(roleId);
-            if (!role) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid role"
-                });
-            }
-        } else {
-            // Lấy role user mặc định
-            role = await Role.findOne({ title: 'user', deleted: false });
-            if (!role) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Default user role not found"
-                });
-            }
-        }
+        if (existingUser) return res.status(400).json({ message: "Email already exists" });
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -56,20 +31,13 @@ module.exports.register = async (req, res) => {
             email,
             password: hashedPassword,
             phone,
-            role: role._id,
             status: "active"
         });
 
         await newUser.save();
-        res.status(201).json({
-            success: true,
-            message: "Register successful"
-        });
+        res.status(201).json({ message: "Register successful" });
     } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
+        res.status(500).json({ error: err.message });
     }
 };
 
@@ -80,59 +48,20 @@ module.exports.login = async (req, res) => {
 
     try {
         const user = await Account.findOne({ email });
-        if (!user || user.deleted) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        if (user.status !== 'active') {
-            return res.status(401).json({
-                success: false,
-                message: "Account is not active"
-            });
-        }
+        if (!user || user.deleted) return res.status(404).json({ message: "User not found" });
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid credentials"
-            });
-        }
-
-        // Cập nhật lastLogin
-        user.lastLogin = new Date();
-        await user.save();
+        if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
         const token = generateToken(user);
-
-        res.status(200).json({
-            success: true,
-            token,
-            user: {
-                id: user._id,
-                fullName: user.fullName,
-                email: user.email,
-                role: user.role,
-                status: user.status,
-                lastLogin: user.lastLogin
-            }
-        });
+        res.status(200).json({ token, user: { fullName: user.fullName, email: user.email } });
     } catch (err) {
-        res.status(500).json({
-            success: false,
-            error: err.message
-        });
+        res.status(500).json({ error: err.message });
     }
 };
 
 
 // Dang xuat
 module.exports.logout = async (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Logged out successfully"
-    });
+    res.status(200).json({ message: "Logged out successfully" });
 };

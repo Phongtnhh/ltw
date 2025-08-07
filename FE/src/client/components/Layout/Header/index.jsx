@@ -127,7 +127,7 @@ const Header = () => {
                     Xin chào, {user?.fullName || user?.email}
                   </div>
                   {/* Admin Panel Link for Mobile - chỉ hiện cho admin */}
-                  {(user?.role === 'admin' || user?.isAdmin || user?.email === 'admin@example.com') && (
+                  {(user?.role === 'admin' ) && (
                     <Link
                       to="/admin"
                       className={styles.mobileAdminButton}
