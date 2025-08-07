@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-      const response = await fetch('http://localhost:3000/auth/register', {
+      const response = await fetch('http://localhost:3000/admin/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

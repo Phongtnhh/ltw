@@ -92,6 +92,85 @@ export const newsAPI = {
   },
 };
 
+// User Management API
+export const userAPI = {
+  // Lấy danh sách người dùng với phân trang và tìm kiếm
+  getUsers: async (params = {}) => {
+    const queryParams = new URLSearchParams();
+
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    if (params.search) queryParams.append('search', params.search);
+    if (params.role) queryParams.append('role', params.role);
+    if (params.status) queryParams.append('status', params.status);
+
+    const url = `${API_BASE_URL}/admin/users${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  // Lấy thông tin chi tiết một người dùng
+  getUserById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  // Tạo người dùng mới
+  createUser: async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return response.json();
+  },
+
+  // Cập nhật thông tin người dùng
+  updateUser: async (id, userData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return response.json();
+  },
+
+  // Xóa người dùng
+  deleteUser: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  // Thay đổi trạng thái người dùng
+  changeUserStatus: async (id, status) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    return response.json();
+  },
+
+  // Lấy thống kê người dùng
+  getUserStats: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/stats`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+};
+
 // Generic API helper
 export const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -103,11 +182,11 @@ export const apiRequest = async (endpoint, options = {}) => {
   try {
     const response = await fetch(url, config);
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.message || 'API request failed');
     }
-    
+
     return data;
   } catch (error) {
     console.error('API Error:', error);
