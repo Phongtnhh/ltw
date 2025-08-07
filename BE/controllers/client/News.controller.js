@@ -3,7 +3,7 @@ const News = require("../../model/News.model")
 module.exports.index = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = 4;
     const skip = (page - 1) * limit;
     const search = req.query.search || '';
     const category = req.query.category || '';
