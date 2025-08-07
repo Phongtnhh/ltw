@@ -171,6 +171,36 @@ export const userAPI = {
   },
 };
 
+// Dashboard API
+export const dashboardAPI = {
+  // Lấy tổng quan dashboard (stats + activities)
+  getOverview: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/dashboard/overview`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  // Lấy thống kê tổng quan
+  getStats: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/dashboard/stats`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  // Lấy hoạt động gần đây
+  getRecentActivities: async (limit = 10) => {
+    const response = await fetch(`${API_BASE_URL}/admin/dashboard/recent-activities?limit=${limit}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+};
+
 // Generic API helper
 export const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;

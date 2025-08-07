@@ -32,17 +32,17 @@ module.exports.index = async (req, res) => {
             filter.status = status;
         }
 
-        // Tính toán pagination
+     
         const skip = (parseInt(page) - 1) * parseInt(limit);
         
-        // Lấy dữ liệu với pagination
+   
         const users = await Account.find(filter)
-            .select('-password') // Không trả về password
+            .select('-password') 
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(parseInt(limit));
 
-        // Đếm tổng số records
+    
         const total = await Account.countDocuments(filter);
         const totalPages = Math.ceil(total / parseInt(limit));
 
