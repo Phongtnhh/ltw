@@ -1,0 +1,112 @@
+/* EditNews Component Styles - Same as CreateNews but with edit-specific additions */
+@import '../CreateNews/CreateNews.module.css';
+
+/* Additional styles for EditNews */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: var(--admin-gray-600);
+}
+
+.loading p {
+  margin-top: var(--admin-space-4);
+  font-size: var(--admin-text-lg);
+}
+
+.currentThumbnail {
+  margin-bottom: var(--admin-space-4);
+  padding: var(--admin-space-4);
+  background: var(--admin-gray-50);
+  border-radius: var(--admin-radius);
+  border: 1px solid var(--admin-gray-200);
+}
+
+.currentThumbnail p {
+  margin-bottom: var(--admin-space-2);
+  font-size: var(--admin-text-sm);
+  font-weight: 500;
+  color: var(--admin-gray-700);
+}
+
+.thumbnailPreview p {
+  margin-bottom: var(--admin-space-2);
+  font-size: var(--admin-text-sm);
+  font-weight: 500;
+  color: var(--admin-success-dark);
+}
+
+/* Override page title for edit */
+.pageTitle::after {
+  content: ' ✏️';
+  opacity: 0.7;
+}
+
+/* Edit-specific form styling */
+.formContainer {
+  position: relative;
+}
+
+.formContainer::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--admin-warning), var(--admin-warning-dark));
+  border-radius: var(--admin-radius-xl) var(--admin-radius-xl) 0 0;
+}
+
+/* Loading spinner for form submission */
+.submitButton .loadingSpinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--admin-space-2);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success state for updated fields */
+.input.updated,
+.textarea.updated,
+.select.updated {
+  border-color: var(--admin-success);
+  box-shadow: 0 0 0 3px var(--admin-success-light);
+}
+
+/* Comparison view for changes */
+.changeIndicator {
+  position: absolute;
+  right: var(--admin-space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--admin-warning);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Mobile responsiveness for edit form */
+@media (max-width: 768px) {
+  .currentThumbnail,
+  .thumbnailPreview {
+    text-align: center;
+  }
+  
+  .previewImage {
+    max-width: 100%;
+    height: auto;
+  }
+}

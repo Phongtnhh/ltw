@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
@@ -34,7 +34,160 @@ export const authAPI = {
   },
 
   logout: async () => {
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}/admin/auth/logout`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+};
+
+// User Management API
+export const userAPI = {
+  getUsers: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(`${API_BASE_URL}/admin/users?${queryString}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  getUser: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  createUser: async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return response.json();
+  },
+
+  updateUser: async (id, userData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData),
+    });
+    return response.json();
+  },
+
+  deleteUser: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  changeUserStatus: async (id, status) => {
+    const response = await fetch(`${API_BASE_URL}/admin/users/${id}/status`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ status }),
+    });
+    return response.json();
+  },
+};
+
+// Role Management API
+export const roleAPI = {
+  getRoles: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/roles`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  getRole: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/roles/${id}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  createRole: async (roleData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/roles`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(roleData),
+    });
+    return response.json();
+  },
+
+  updateRole: async (id, roleData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/roles/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(roleData),
+    });
+    return response.json();
+  },
+
+  deleteRole: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/roles/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+};
+
+// Permission Management API
+export const permissionAPI = {
+  getPermissions: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  getPermission: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions/${id}`, {
+      method: 'GET',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  createPermission: async (permissionData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(permissionData),
+    });
+    return response.json();
+  },
+
+  updatePermission: async (id, permissionData) => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(permissionData),
+    });
+    return response.json();
+  },
+
+  deletePermission: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return response.json();
+  },
+
+  getResources: async () => {
+    const response = await fetch(`${API_BASE_URL}/admin/permissions/resources`, {
       method: 'GET',
       headers: getAuthHeaders(),
     });

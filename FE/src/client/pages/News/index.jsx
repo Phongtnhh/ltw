@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../shared/contexts/AuthContext';
+import { Link } from 'react-router-dom';
+// import { useAuth } from '../../../shared/contexts/AuthContext';
 import styles from './News.module.css';
 
 const News = () => {
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  // const navigate = useNavigate();
+  // const { isAuthenticated } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [newsData, setNewsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,19 +49,19 @@ const News = () => {
   const featuredNews = newsData.find((news) => news.featured);
   const regularNews = filteredNews.filter((news) => !news.featured);
 
-  const handleCreateNews = () => {
-    if (!isAuthenticated) {
-      alert('Vui lòng đăng nhập để tạo bài viết mới');
-      navigate('/login');
-    } else {
-      navigate('/news/create');
-    }
-  };
+  // const handleCreateNews = () => {
+  //   if (!isAuthenticated) {
+  //     alert('Vui lòng đăng nhập để tạo bài viết mới');
+  //     navigate('/login');
+  //   } else {
+  //     navigate('/news/create');
+  //   }
+  // };
 
   return (
     <div className={styles.newsPage}>
       {/* Header */}
-      <div className={styles.pageHeader}>
+      {/* <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
           <h1 className={styles.pageTitle}>Tin Tức</h1>
           <p className={styles.pageSubtitle}>Cập nhật thông tin mới nhất từ cổng thông tin</p>
@@ -69,7 +69,7 @@ const News = () => {
             Tạo bài viết mới
           </button>
         </div>
-      </div>
+      </div> */}
 
       <div className={styles.mainContent}>
         {/* Content */}

@@ -16,10 +16,10 @@ app.use(cors({
   credentials: true
 }));
 
-// Socket io
-const {Server}  =  require('socket.io');
-const io = new Server(server);
-global._io = io;
+// Socket io (removed - no longer needed)
+// const {Server}  =  require('socket.io');
+// const io = new Server(server);
+// global._io = io;
 
 app.use(express.json());
 
@@ -31,7 +31,7 @@ connectDB();
 
 // Routes
 Routeclient(app);
-RouteAdmin(app);
+app.use('/admin', RouteAdmin);
 server.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });

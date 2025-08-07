@@ -6,6 +6,8 @@ import AdminProtectedRoute from '../components/AdminProtectedRoute';
 // Import Admin Pages
 import Dashboard from '../pages/Dashboard';
 import NewsManagement from '../pages/NewsManagement';
+import CreateNews from '../pages/CreateNews';
+import EditNews from '../pages/EditNews';
 import UserManagement from '../pages/UserManagement';
 import PermissionManagement from '../pages/PermissionManagement';
 import BannerManagement from '../pages/BannerManagement';
@@ -20,8 +22,8 @@ const AdminRouter = () => {
           
           {/* News Management */}
           <Route path="/news" element={<NewsManagement />} />
-          <Route path="/news/create" element={<div>Create News Page</div>} />
-          <Route path="/news/edit/:id" element={<div>Edit News Page</div>} />
+          <Route path="/news/create" element={<CreateNews />} />
+          <Route path="/news/edit/:id" element={<EditNews />} />
           
           {/* User Management */}
           <Route path="/users" element={<UserManagement />} />

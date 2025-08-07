@@ -22,11 +22,10 @@ const AdminProtectedRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Kiểm tra quyền admin (giả sử user có role hoặc isAdmin)
-  // Trong thực tế, bạn có thể kiểm tra user.role === 'admin' hoặc user.isAdmin
-  const isAdmin = user?.role === 'admin' || user?.isAdmin || user?.email === 'admin@example.com';
-  
-  if (!isAdmin) {
+  // Kiểm tra quyền admin
+  const userIsAdmin = user?.role?.title === 'admin';
+
+  if (!userIsAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">

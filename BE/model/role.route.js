@@ -1,20 +1,32 @@
 const mongoose = require("mongoose");
+
 const roleSchema = new mongoose.Schema({
-    title : String,
-    accountid : {
+    title: {
         type: String,
-        default : "",
+        required: true,
+        unique: true
     },
-    deleted : {
-        type : Boolean,
-        default : false
+    description: {
+        type: String,
+        default: ""
     },
-    deletedAt : Date
-},
-{
-    timestamps : true,
+    permissions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Permission'
+    }],
+    isDefault: {
+        type: Boolean,
+        default: false
+    },
+    deleted: {
+        type: Boolean,
+        default: false
+    },
+    deletedAt: Date
+}, {
+    timestamps: true,
 });
 
-const Role = mongoose.model("Role",roleSchema, "roles");
+const Role = mongoose.model("Role", roleSchema, "roles");
 
 module.exports = Role;

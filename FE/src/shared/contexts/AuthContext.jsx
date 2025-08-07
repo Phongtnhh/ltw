@@ -28,26 +28,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-      // Demo admin login - trong thực tế sẽ gọi API
-      if (email === 'admin@example.com' && password === 'admin123') {
-        const adminUser = {
-          id: 1,
-          email: 'admin@example.com',
-          name: 'Administrator',
-          role: 'admin',
-          isAdmin: true
-        };
-        const adminToken = 'demo-admin-token';
-
-        setToken(adminToken);
-        setUser(adminUser);
-        localStorage.setItem('token', adminToken);
-        localStorage.setItem('user', JSON.stringify(adminUser));
-        return { success: true, data: { user: adminUser, token: adminToken } };
-      }
-
       try {
-        const response = await fetch('http://localhost:3000/auth/login', {
+        const response = await fetch('http://localhost:3000/admin/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,14 +39,14 @@ export const AuthProvider = ({ children }) => {
 
         const data = await response.json();
 
-        if (response.ok) {
+        if (response.ok && data.success) {
           setToken(data.token);
           setUser(data.user);
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
           return { success: true, data };
         } else {
-          return { success: false, error: data.message };
+          return { success: false, error: data.message || 'Đăng nhập thất bại' };
         }
       } catch (error) {
         return { success: false, error: 'Không thể kết nối đến server' };
@@ -96,6 +78,30 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
+  // Helper functions để kiểm tra quyền
+  const hasPermission = (resource, action) => {
+    if (!user || !user.role) return false;
+
+    // Admin có tất cả quyền
+    if (user.role.title === 'admin') return true;
+
+    if (!user.role.permissions) return false;
+
+    return user.role.permissions.some(permission => {
+      return permission.resource === resource &&
+             (permission.actions.includes(action) || permission.actions.includes('manage'));
+    });
+  };
+
+  const hasRole = (roleName) => {
+    if (!user || !user.role) return false;
+    return user.role.title === roleName;
+  };
+
+  const isAdmin = () => {
+    return hasRole('admin');
+  };
+
   const value = {
     user,
     token,
@@ -104,6 +110,9 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     isAuthenticated: !!token,
+    hasPermission,
+    hasRole,
+    isAdmin,
   };
 
   return (

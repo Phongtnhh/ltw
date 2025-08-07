@@ -33,7 +33,6 @@ const Header = () => {
   const navItems = [
     { path: '/', label: 'Trang Chủ' },
     { path: '/news', label: 'Tin Tức' },
-    { path: '/services', label: 'Dịch Vụ' },
     { path: '/documents', label: 'Văn Bản' },
     { path: '/contact', label: 'Liên Hệ' },
     { path: '/about', label: 'Giới Thiệu' }

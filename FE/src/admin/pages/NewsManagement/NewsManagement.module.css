@@ -1,0 +1,372 @@
+/* NewsManagement Component Styles */
+.container {
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.headerContent h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.headerContent p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: #3b82f6;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.createButton:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.createButton svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+}
+
+.filtersSection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.filtersGrid {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.searchInput {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.statusSelect {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  background: white;
+  min-width: 150px;
+  transition: all 0.2s ease;
+}
+
+.statusSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background: #f9fafb;
+}
+
+.tableHeader th {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tableHeader th:last-child {
+  text-align: right;
+}
+
+.tableBody {
+  background: white;
+}
+
+.tableRow {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background: #f9fafb;
+}
+
+.tableCell {
+  padding: 1rem 1.5rem;
+  vertical-align: top;
+}
+
+.newsTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.featuredBadge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: #fef3c7;
+  color: #d97706;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.authorText {
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+.statusPublished {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.statusDraft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusArchived {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.dateText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.viewsText {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.actionsCell {
+  text-align: right;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.editButton {
+  color: #3b82f6;
+  background: #eff6ff;
+}
+
+.editButton:hover {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.statusButton {
+  color: #059669;
+  background: #ecfdf5;
+}
+
+.statusButton:hover {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.deleteButton {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.deleteButton:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.loadingRow {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.emptyRow {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .filtersGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .createButton {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .tableContainer {
+    overflow-x: auto;
+  }
+  
+  .table {
+    min-width: 600px;
+  }
+  
+  .tableCell {
+    padding: 0.75rem 1rem;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .actionButton {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Focus styles for accessibility */
+.searchInput:focus-visible,
+.statusSelect:focus-visible,
+.actionButton:focus-visible,
+.createButton:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .filtersSection,
+  .actionsCell,
+  .createButton {
+    display: none;
+  }
+  
+  .container {
+    background: white;
+    padding: 0;
+  }
+  
+  .tableContainer {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+}

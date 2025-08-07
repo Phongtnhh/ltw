@@ -1,58 +1,131 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styles from './NewsManagement.module.css';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const NewsManagement = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-
-  // Mock data - trong thực tế sẽ fetch từ API
-  const [newsList, setNewsList] = useState([
-    {
-      id: 1,
-      title: 'Thông báo về dịch vụ công trực tuyến mới',
-      author: 'Admin',
-      status: 'published',
-      createdAt: '2024-01-15',
-      views: 1250,
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Hướng dẫn sử dụng hệ thống mới',
-      author: 'Admin',
-      status: 'draft',
-      createdAt: '2024-01-14',
-      views: 0,
-      featured: false
-    },
-    {
-      id: 3,
-      title: 'Cập nhật chính sách bảo mật',
-      author: 'Admin',
-      status: 'published',
-      createdAt: '2024-01-13',
-      views: 890,
-      featured: false
-    }
-  ]);
-
-  const handleDelete = (id) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa tin tức này?')) {
-      setNewsList(newsList.filter(news => news.id !== id));
-    }
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    setNewsList(newsList.map(news => 
-      news.id === id ? { ...news, status: newStatus } : news
-    ));
-  };
-
-  const filteredNews = newsList.filter(news => {
-    const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || news.status === statusFilter;
-    return matchesSearch && matchesStatus;
+  const [newsList, setNewsList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    limit: 10
   });
+
+  // Fetch news data
+  const fetchNews = async (page = 1) => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: pagination.limit.toString(),
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        ...(searchTerm && { search: searchTerm })
+      });
+
+      console.log('Fetching news with params:', params.toString());
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/admin/news?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      const data = await response.json();
+      console.log('API response:', data);
+
+      if (data.success) {
+        setNewsList(data.data.news);
+        setPagination(data.data.pagination);
+      } else {
+        console.error('API returned error:', data.message);
+        alert(data.message || 'Có lỗi xảy ra khi tải danh sách tin tức');
+      }
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      alert('Có lỗi xảy ra khi tải danh sách tin tức: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data when component mounts
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  // Fetch data when status filter changes
+  useEffect(() => {
+    fetchNews();
+  }, [statusFilter]);
+
+  // Debounced search
+  useEffect(() => {
+    const delayedSearch = setTimeout(() => {
+      fetchNews(1);
+    }, 500);
+
+    return () => clearTimeout(delayedSearch);
+  }, [searchTerm]);
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa tin tức này?')) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_BASE_URL}/admin/news/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert('Xóa tin tức thành công!');
+          fetchNews(pagination.currentPage);
+        } else {
+          alert(data.message || 'Có lỗi xảy ra khi xóa tin tức');
+        }
+      } catch (error) {
+        console.error('Error deleting news:', error);
+        alert('Có lỗi xảy ra khi xóa tin tức');
+      }
+    }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/admin/news/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert(data.message);
+        fetchNews(pagination.currentPage);
+      } else {
+        alert(data.message || 'Có lỗi xảy ra khi thay đổi trạng thái');
+      }
+    } catch (error) {
+      console.error('Error changing status:', error);
+      alert('Có lỗi xảy ra khi thay đổi trạng thái');
+    }
+  };
 
   const getStatusBadge = (status) => {
     const statusConfig = {
@@ -70,18 +143,18 @@ const NewsManagement = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className={styles.container}>
       {/* Page Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Quản lý Tin tức</h1>
-          <p className="text-gray-600">Quản lý tất cả tin tức và bài viết</p>
+      <div className={styles.pageHeader}>
+        <div className={styles.headerContent}>
+          <h1>Quản lý Tin tức</h1>
+          <p>Quản lý tất cả tin tức và bài viết</p>
         </div>
         <Link
           to="/admin/news/create"
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+          className={styles.createButton}
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           Tạo tin tức mới
@@ -142,8 +215,21 @@ const NewsManagement = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredNews.map((news) => (
-                <tr key={news.id} className="hover:bg-gray-50">
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                    Đang tải...
+                  </td>
+                </tr>
+              ) : newsList.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                    Không có tin tức nào
+                  </td>
+                </tr>
+              ) : (
+                newsList.map((news) => (
+                <tr key={news._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div>
@@ -165,27 +251,33 @@ const NewsManagement = () => {
                     {getStatusBadge(news.status)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {news.createdAt}
+                    {new Date(news.createdAt).toLocaleDateString('vi-VN')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {news.views.toLocaleString()}
+                    {news.views || 0}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-2">
                       <Link
-                        to={`/admin/news/edit/${news.id}`}
+                        to={`/admin/news/edit/${news._id}`}
                         className="text-blue-600 hover:text-blue-900"
                       >
                         Sửa
                       </Link>
                       <button
-                        onClick={() => handleStatusChange(news.id, news.status === 'published' ? 'draft' : 'published')}
+                        onClick={() => handleStatusChange(news._id, news.status === 'published' ? 'draft' : 'published')}
                         className="text-green-600 hover:text-green-900"
                       >
                         {news.status === 'published' ? 'Ẩn' : 'Xuất bản'}
                       </button>
                       <button
-                        onClick={() => handleDelete(news.id)}
+                        onClick={() => navigate(`/admin/news/edit/${news._id}`)}
+                        className="text-blue-600 hover:text-blue-900 mr-2"
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        onClick={() => handleDelete(news._id)}
                         className="text-red-600 hover:text-red-900"
                       >
                         Xóa
@@ -193,7 +285,8 @@ const NewsManagement = () => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
         </div>

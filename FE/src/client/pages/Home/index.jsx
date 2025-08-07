@@ -16,7 +16,7 @@ const Home = () => {
         if (response.success) {
           const formattedNews = response.data.map((item) => ({
             ...item,
-            thumbnail: `http://localhost:3000${item.thumbnail}`
+            thumbnail: `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}${item.thumbnail}`
           }));
           setLatestNews(formattedNews);
         } else {
@@ -61,9 +61,6 @@ const Home = () => {
             Nơi cung cấp thông tin chính thức, dịch vụ công trực tuyến và hỗ trợ người dân
           </p>
           <div className={styles.heroButtons}>
-            <Link to="/services" className={styles.primaryButton}>
-              Dịch Vụ Công
-            </Link>
             <Link to="/news" className={styles.secondaryButton}>
               Tin Tức Mới
             </Link>
